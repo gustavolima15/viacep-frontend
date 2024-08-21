@@ -1,0 +1,25 @@
+<div class="input-box" *ngIf="control">
+  <input
+    [type]="type == 'password' ? (hidePassword ? 'password' : 'text') : type"
+    [formControl]="control"
+    [required]="isRequired"
+    [id]="inputId"
+    [class.invalid]="invalid"
+  />
+  <label [class.required]="isRequired" [for]="inputId" *ngIf="label">{{
+    label
+  }}</label>
+
+  <i
+    *ngIf="type == 'password'"
+    class="bi hasVisiblePassword"
+    [class]="hidePassword ? 'bi-eye' : 'bi-eye-slash'"
+    (click)="hidePassword = !hidePassword"
+  ></i>
+  <i
+    *ngIf="type != 'password' && icon"
+    class="bi hasVisiblePassword"
+    [class]="icon"
+    [ngStyle]="{ 'font-size.px': icon.size, color: icon.color }"
+  ></i>
+</div>

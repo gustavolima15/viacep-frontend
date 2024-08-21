@@ -1,0 +1,68 @@
+.new-address {
+  background: #1f293a;
+  border: 2px solid;
+  box-shadow: inset -1px -3px 20px 0px #167677;
+  &:hover {
+    transition: box-shadow 600ms;
+    box-shadow: inset 0px 0px 10px 0px #167677;
+  }
+}
+.wrap-modal {
+  position: relative;
+  background-color: #1f293a !important;
+  border: 2px solid;
+  box-shadow: inset -1px -3px 20px 0px #167677;
+  overflow-y: auto;
+  .close {
+    position: absolute;
+    top: 11px;
+    right: 16px;
+    cursor: pointer;
+    z-index: 1;
+    font-size: 29px;
+    color: #0ef;
+    background: none;
+    border: none;
+
+    &:hover {
+      transition: color 600ms;
+      color: rgb(20, 120, 128);
+    }
+  }
+
+  .btn-save {
+    background: #1f293a;
+    border: 2px solid;
+    color: #fff;
+    box-shadow: inset -1px -3px 20px 0px #36cb6b;
+    &:hover {
+      transition: box-shadow 600ms;
+      box-shadow: inset 0px 0px 10px 0px #167677;
+    }
+  }
+
+#isMainAddress{
+  margin-left: -7px;
+  margin-right: 3px;
+}
+}
+.actions {
+  button{
+    height: 34px;
+  }
+}
+.mainEddress{
+  background: #3dbd5a;
+  padding: 3px 17px;
+  border-radius: 5px;
+}
+.notMainEddress{
+  background: #ec3e3e;
+  padding: 3px 17px;
+  border-radius: 5px;
+}
+
+ input.invalid {
+  border: 2px solid rgb(247 32 16);
+}
+

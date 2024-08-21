@@ -1,0 +1,270 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between">
+    <h2>Endereços</h2>
+    <button
+      type="button"
+      class="btn btn-success ml-5 new-address"
+      (click)="open(modalContent); type = 'create'"
+    >
+      Novo
+    </button>
+  </div>
+  <hr />
+
+  <h2>Endereços Registrados</h2>
+  <app-loading *ngIf="isLoading"></app-loading>
+  <table class="table table-hover table-dark" *ngIf="!isLoading">
+    <thead>
+      <tr>
+        <th>CEP</th>
+        <th>Estado</th>
+        <th>Cidade</th>
+        <th>Bairro</th>
+        <th>Principal</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(address of addresses$ | async; track $index){
+      <tr>
+        <th>{{ address.postalCode }}</th>
+        <th>{{ address.state.name }}</th>
+        <th>{{ address.city.name }}</th>
+        <th>{{ address.street }}</th>
+        <th class="ml-1">
+          <span
+            [class]="address.isMainAddress ? 'mainEddress' : 'notMainEddress'"
+          >
+            {{ address.isMainAddress ? "Sim" : "Não" }}
+          </span>
+        </th>
+        <th>
+          <div class="actions">
+            <button
+              class="btn btn-info mx-1"
+              (click)="onEdit(modalContent, address)"
+            >
+              Editar
+            </button>
+
+            <button class="btn btn-danger" (click)="openDialog(address)">
+              Deletar
+            </button>
+          </div>
+        </th>
+      </tr>
+      } @if (addresses$ | async ; as data ){ @if (data.length == 0) {
+      <tr>
+        <td colspan="6" class="text-center">Nenhum endereço encontrado</td>
+      </tr>
+      } }
+    </tbody>
+  </table>
+  <ngb-pagination
+    *ngIf="!isLoading"
+    [collectionSize]="collectionSize"
+    [(page)]="currentPage"
+    [boundaryLinks]="true"
+    [pageSize]="pageSize"
+    (pageChange)="onPageChange($event)"
+  />
+</div>
+
+<ng-template #modalContent let-modal>
+  <main class="wrap-modal">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-title">
+        {{ type === "create" ? "Novo Endereço" : "Editar Endereço" }}
+      </h4>
+      <button
+        type="button"
+        aria-label="Close"
+        class="close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <i class="bi bi-x-circle "></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="form" class="row needs-validation">
+        <input type="hidden" formControlName="id" />
+        <div class="mb-3 col-3">
+          <label for="postalCode" class="form-label">CEP</label>
+          <input
+            class="form-control"
+            placeholder="12345678"
+            formControlName="postalCode"
+            appOnlyNumbers
+            maxlength="8"
+            (blur)="getCep($event)"
+            [class.invalid]="form.controls.postalCode.invalid && isSubmit"
+          />
+          <!-- <div class="text=danger" *ngIf="form.controls.postalCode.touched">
+            <span *ngIf="form.controls.postalCode.errors!['required']">
+              O CEP é obrigatório.
+            </span>
+            <span *ngIf="form.controls.postalCode.errors!['minlength']">
+              O CEP deve ter no mínimo 8 caracteres.
+            </span>
+            <span *ngIf="form.controls.postalCode.errors!['maxlength']">
+              O CEP deve ter no máximo 8 caracteres.
+            </span>
+          </div> -->
+        </div>
+        <div class="mb-3 col-4">
+          <label for="stateId" class="form-label">Estado</label>
+          <select
+            class="form-select"
+            aria-label="lista de estado"
+            id="stateId"
+            (change)="handleChangeState($event)"
+            formControlName="stateId"
+            [class.invalid]="form.controls.stateId.invalid && isSubmit"
+            placeholder="Selecione um Estado"
+          >
+            <option selected value=""></option>
+            <option
+              [value]="state.id"
+              *ngFor="let state of dataStates$ | async"
+            >
+              {{ state.name }}
+            </option>
+          </select>
+        </div>
+        <div class="mb-3 col-5">
+          <label for="cityId" class="form-label">Cidade</label>
+          <select
+            class="form-select"
+            aria-label="lista de estado"
+            id="cityId"
+
+            [class.invalid]="form.controls.cityId.invalid && isSubmit"
+            placeholder="Selecione uma Cidade"
+          >
+            <option selected value=""></option>
+
+              <option [value]="city.id" *ngFor="let city of (dataCities$ | async)">
+                {{ city?.name }}
+              </option>
+
+          </select>
+        </div>
+        <div class="mb-3 col-9">
+          <label for="street" class="form-label">Rua</label>
+          <input
+            type="text"
+            class="form-control"
+            id="street"
+            formControlName="street"
+            placeholder="Main Street 23"
+            [class.invalid]="form.controls.street.invalid && isSubmit"
+          />
+        </div>
+        <div class="mb-3 col-3">
+          <label for="locationType" class="form-label"
+            >Tipo de Residencia</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="locationType"
+            formControlName="locationType"
+            placeholder="Residencial"
+            [class.invalid]="form.controls.locationType.invalid && isSubmit"
+          />
+        </div>
+        <div class="mb-3 col">
+          <label for="location" class="form-label">Local</label>
+          <input
+            type="text"
+            class="form-control"
+            id="location"
+            formControlName="location"
+            placeholder="Building A"
+            [class.invalid]="form.controls.location.invalid && isSubmit"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="neighborhood" class="form-label">Bairro</label>
+          <input
+            type="text"
+            class="form-control"
+            id="neighborhood"
+            formControlName="neighborhood"
+            placeholder="Downtown"
+            [class.invalid]="form.controls.neighborhood.invalid && isSubmit"
+          />
+        </div>
+
+        <div class="mb-3 col-4">
+          <label for="number" class="form-label">Número</label>
+          <input
+            type="text"
+            class="form-control"
+            id="number"
+            formControlName="number"
+            placeholder="123"
+            [class.invalid]="form.controls.number.invalid && isSubmit"
+          />
+        </div>
+        <div class="mb-3 col-4">
+          <label for="block" class="form-label">Bloco</label>
+          <input
+            type="text"
+            class="form-control"
+            id="block"
+            formControlName="block"
+            placeholder="A"
+            [class.invalid]="form.controls.block.invalid && isSubmit"
+          />
+        </div>
+        <div class="mb-3 col-4">
+          <label for="lot" class="form-label">Lote</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lot"
+            formControlName="lot"
+            placeholder="1"
+            [class.invalid]="form.controls.lot.invalid && isSubmit"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="complement" class="form-label">Complemento</label>
+          <input
+            type="text"
+            class="form-control"
+            id="complement"
+            formControlName="complement"
+            placeholder="Apt 101"
+            [class.invalid]="form.controls.complement.invalid && isSubmit"
+          />
+        </div>
+
+        <div class="mb-3 m form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="isMainAddress"
+            formControlName="isMainAddress"
+          />
+          <label class="form-check-label" for="isMainAddress"
+            >Endereço Principal</label
+          >
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="modal.dismiss()"
+      >
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-save" (click)="onSubmit(modal)">
+        {{ type === "create" ? "Criar" : "Editar" }}
+      </button>
+    </div>
+  </main>
+</ng-template>

@@ -1,0 +1,44 @@
+<main class="wrap-login">
+  <div class="container">
+    <div class="login-box">
+      <h2>Registro</h2>
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit($event)">
+        <app-input-box
+          label="name"
+          formControlName="name"
+          inputId="name"
+          [invalid]="signupForm.controls['name'].invalid && submitted"
+        />
+
+        <app-input-box
+          label="email"
+          type="email"
+          formControlName="email"
+          inputId="email"
+          [invalid]="signupForm.controls['email'].invalid && submitted"
+        />
+        <app-input-box
+          label="password"
+          type="password"
+          inputId="password"
+          formControlName="password"
+          [invalid]="signupForm.controls['password'].invalid && submitted"
+        />
+
+        <app-input-box
+          label="confirma password"
+          type="password"
+          inputId="confirmPassword"
+          formControlName="confirmPassword"
+          [invalid]="signupForm.controls['confirmPassword'].invalid && submitted"
+        />
+
+        <button type="submit" class="btn">{{isLoading ? 'Cadastrando...' : 'Cadastrar'}}</button>
+        <div class="signup-link">
+          <p>Voltar para tela de <a routerLink="/auth">login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</main>

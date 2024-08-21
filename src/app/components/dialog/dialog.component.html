@@ -1,0 +1,14 @@
+<main>
+  <i class="bi bi-x-circle close " mat-dialog-close></i>
+  <h2 [class]="data.type" mat-dialog-title>{{ data.title }} </h2>
+
+  <mat-dialog-content class="mat-typography">
+    {{ data.content }}
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button mat-button mat-dialog-close class="cancel">Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial [class]="data.type" >
+      {{ data.type }}
+    </button>
+  </mat-dialog-actions>
+</main>
