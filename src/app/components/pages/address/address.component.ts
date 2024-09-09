@@ -226,7 +226,6 @@ export class AddressComponent implements OnInit {
         next: (valueCep) => {
           console.log(valueCep);
           this.dataCities$.subscribe((cities) => {
-            // Atualizar cidade se necessário
           });
         },
         error: (err) => {
@@ -245,7 +244,6 @@ export class AddressComponent implements OnInit {
     });
   }
 
-  // Função para abrir o diálogo de confirmação de exclusão
   openDialog(address: AddressResponse) {
     const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
       data: {

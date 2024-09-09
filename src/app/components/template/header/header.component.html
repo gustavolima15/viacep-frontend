@@ -32,7 +32,7 @@
             >
           </li>
 
-          <!-- Exibe o link 'Admin' apenas se o usuário for um administrador -->
+          <!-- aba 'Admin' se o usuário for um administrador -->
           <li class="nav-item" *ngIf="authService.isAdmin()">
             <a class="nav-link" routerLink="/admin/users" routerLinkActive="active"
               >Admin</a

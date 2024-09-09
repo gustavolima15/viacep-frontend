@@ -11,12 +11,11 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) {}
 
-  // Método para obter a lista de usuários
+
   getUsers(): Observable<any> {
     return this.httpClient.get(`${this.apiUrl}/user`);
   }
 
-  // Método para deletar um usuário pelo ID
   deleteUser(userId: number): Observable<void> {
     return this.httpClient.delete<void>(`${this.apiUrl}/admin/delete-user/${userId}`);
   }

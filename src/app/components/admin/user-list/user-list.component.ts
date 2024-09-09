@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';  // Importe o CommonModule
+import { CommonModule } from '@angular/common';
 import { UserService } from '../../../services/user/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
   standalone: true,
-  imports: [CommonModule],  // Certifique-se de que CommonModule está aqui
+  imports: [CommonModule],  
 })
 export class UserListComponent implements OnInit {
   users: any[] = [];
@@ -26,15 +26,15 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserId = this.authService.getUserDetail()?.id || null;
-    this.loadUsers(); // Carregar a lista de usuários quando o componente inicializar
+    this.loadUsers(); 
   }
 
-  // Método para carregar os usuários
+ 
   loadUsers(): void {
     this.userService.getUsers().subscribe({
       next: (data: any[]) => {
-        // Verifique os dados retornados da API
-        this.users = data.filter(user => user.id !== this.currentUserId); // Armazena a lista de usuários retornada
+        
+        this.users = data.filter(user => user.id !== this.currentUserId); 
       },
       error: (err) => {
         this.toastr.error('Erro ao carregar lista de usuários');
@@ -42,12 +42,12 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  // Método para deletar um usuário
+ 
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe({
       next: () => {
         this.toastr.success('Usuário deletado com sucesso');
-        this.loadUsers(); // Recarrega a lista após deletar
+        this.loadUsers(); 
       },
       error: (err) => {
         this.toastr.error('Erro ao deletar usuário');
