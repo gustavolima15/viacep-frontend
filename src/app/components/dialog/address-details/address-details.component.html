@@ -1,0 +1,10 @@
+<h2>Detalhes do Endereço</h2>
+<p><strong>CEP:</strong> {{ data.address.postalCode }}</p>
+<p><strong>Logradouro:</strong> {{ data.address.street }}</p>
+<p><strong>Cidade:</strong> {{ data.address.city.name }}</p>
+<p><strong>Estado:</strong> {{ data.address.state?.name }}</p>
+<p><strong>Bairro:</strong> {{ data.address.neighborhood }}</p>
+<p><strong>Número:</strong> {{ data.address.number }}</p>
+<p><strong>Complemento:</strong> {{ data.address.complement }}</p>
+<p><strong>Principal:</strong> {{ data.address.isMainAddress ? 'Sim' : 'Não' }}</p>
+<p><strong>Tipo de Residência:</strong> {{data.address.locationType}}</p>

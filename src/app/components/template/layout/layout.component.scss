@@ -4,5 +4,23 @@
   justify-content: space-between;
   min-height: 100vh;
 }
+.light-theme {
+  --primary-color: #1976d2;
+  --background-color: #f5f5f5;
+  --text-color: #000;
+}
+
+/* Tema Escuro */
+.dark-theme {
+  --primary-color: #212121;
+  --background-color: #303030;
+  --text-color: #fff;
+}
+
+/* Estilos Globais */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
 
 

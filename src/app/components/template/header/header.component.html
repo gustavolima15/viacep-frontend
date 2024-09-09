@@ -1,9 +1,9 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/home" routerLinkActive="active"
-        >Sistemas</a
-      >
+      <!-- <a class="navbar-brand" routerLink="/home" routerLinkActive="active">
+        Sistemas
+      </a>
       <button
         class="navbar-toggler"
         type="button"
@@ -14,7 +14,7 @@
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
-      </button>
+      </button> -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
@@ -28,7 +28,14 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/endereco" routerLinkActive="active"
-              >Endereço</a
+              >Endereços</a
+            >
+          </li>
+
+          <!-- Exibe o link 'Admin' apenas se o usuário for um administrador -->
+          <li class="nav-item" *ngIf="authService.isAdmin()">
+            <a class="nav-link" routerLink="/admin/users" routerLinkActive="active"
+              >Admin</a
             >
           </li>
 

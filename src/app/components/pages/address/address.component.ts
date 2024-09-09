@@ -1,25 +1,18 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-
-import { Observable, map, of, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap } from 'rxjs';
 import { AddressResponse } from '../../../types/address.response.type';
 import { CommonModule } from '@angular/common';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import {
-  AddressService,
-  StateResponse,
-} from '../../../services/address/address.service';
-import {
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { AddressService, StateResponse } from '../../../services/address/address.service';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-
 import { ViaCepService } from '../../../services/address/via-cep.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../dialog/dialog.component';
 import { LoadingComponent } from '../../loading/loading.component';
 import { OnlyNumbersDirective } from '../../../directives/only-numbers/only-numbers.directive';
+import { AddressDetailsComponent } from '../../dialog/address-details/address-details.component';
+import { ConfirmDeleteComponent } from '../../dialog/confirm-delete/confirm-delete.component'; // Importando o componente de confirmação
 
 @Component({
   selector: 'app-endereco',
@@ -33,7 +26,7 @@ import { OnlyNumbersDirective } from '../../../directives/only-numbers/only-numb
   ],
   providers: [OnlyNumbersDirective],
   templateUrl: './address.component.html',
-  styleUrl: './address.component.scss',
+  styleUrls: ['./address.component.scss'],
 })
 export class AddressComponent implements OnInit {
   currentPage = 1;
@@ -49,6 +42,7 @@ export class AddressComponent implements OnInit {
   isLoading: boolean = true;
   isCityLoading = false;
   isSubmit = false;
+
   constructor(
     private addressServe: AddressService,
     private toastr: ToastrService,
@@ -88,7 +82,7 @@ export class AddressComponent implements OnInit {
     ],
     street: ['', Validators.required],
     location: ['', Validators.required],
-    locationType: [''],
+    locationType: ['', Validators.required],
     neighborhood: ['', Validators.required],
     number: ['', Validators.required],
     block: [''],
@@ -111,7 +105,7 @@ export class AddressComponent implements OnInit {
             this.listAllAddressByUser();
           },
           error: (value) => {
-            this.toastr.error('Error ao editar o endereço');
+            this.toastr.error('Erro ao editar o endereço');
           },
         });
       } else {
@@ -121,12 +115,11 @@ export class AddressComponent implements OnInit {
             this.listAllAddressByUser();
           },
           error: (value) => {
-            this.toastr.error('Error ao salvar o endereço');
+            this.toastr.error('Erro ao salvar o endereço');
           },
         });
       }
       this.form.reset();
-
       modalRef.dismiss();
     } else {
       this.toastr.error('Preencha todos os campos');
@@ -154,6 +147,7 @@ export class AddressComponent implements OnInit {
         this.form.reset();
       });
   }
+
   handleChangeState(event: Event) {
     const inputElement = event.target as HTMLSelectElement;
     const stateId = parseInt(inputElement.value);
@@ -171,7 +165,6 @@ export class AddressComponent implements OnInit {
         this.dataCities$ = this.addressServe.getAllCitieyByState(
           value.state.id
         );
-
         this.form.patchValue({
           ...value,
           cityId: value.city.id.toString(),
@@ -180,7 +173,6 @@ export class AddressComponent implements OnInit {
         });
       },
     });
-
     this.open(content);
   }
 
@@ -192,7 +184,7 @@ export class AddressComponent implements OnInit {
         this.listAllAddressByUser();
       },
       error: (value) => {
-        this.toastr.error('Error ao deletar o endereço');
+        this.toastr.error('Erro ao deletar o endereço');
       },
     });
   }
@@ -223,7 +215,6 @@ export class AddressComponent implements OnInit {
                 this.dataCities$ = this.addressServe.getAllCitieyByState(
                   matchingState.id
                 );
-
               }
 
               return this.dataCities$;
@@ -235,20 +226,7 @@ export class AddressComponent implements OnInit {
         next: (valueCep) => {
           console.log(valueCep);
           this.dataCities$.subscribe((cities) => {
-            /*const matchingCity = cities.find(
-              (city) =>
-                city.name.toLowerCase() === valueCep?.localidade.toLowerCase()
-            );
-
-            if (matchingCity) {
-              // Verifique se o controle 'cityId' existe
-              if (this.form.controls['cityId']) {
-                this.form.controls['cityId'].setValue(
-                  matchingCity.id.toString()
-                );
-                console.log(matchingCity.id.toString());
-              }
-            }*/
+            // Atualizar cidade se necessário
           });
         },
         error: (err) => {
@@ -256,18 +234,29 @@ export class AddressComponent implements OnInit {
         },
       });
   }
-  openDialog(address?: AddressResponse) {
-    const dialogRef = this.dialog.open(DialogComponent, {
+
+  openAddressDetails(address: AddressResponse) {
+    const dialogRef = this.dialog.open(AddressDetailsComponent, {
+      data: { address: address },
+      width: '500px',
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  // Função para abrir o diálogo de confirmação de exclusão
+  openDialog(address: AddressResponse) {
+    const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
       data: {
-        title: 'Deletar',
-        content: 'Tem certeza que deseja deletar o endereço?',
-        type: 'Deletar',
+        title: 'Confirmar Exclusão',
+        content: 'Tem certeza que deseja deletar este endereço?',
       },
     });
 
     dialogRef.afterClosed().subscribe((isConfirmed) => {
       if (isConfirmed) {
-        this.onDelete(address!);
+        this.onDelete(address);
       }
     });
   }

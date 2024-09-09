@@ -67,10 +67,6 @@ This project aims to provide learning and practice with the Angular framework.
 ```
 
 
-## Author
-
--   [@rodrigosilvaDev23](https://github.com/rodrigoSilva23)
-
 ## License
 
 The Angular is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

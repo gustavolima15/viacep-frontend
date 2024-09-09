@@ -19,7 +19,7 @@
         <th>CEP</th>
         <th>Estado</th>
         <th>Cidade</th>
-        <th>Bairro</th>
+        <th>Logradouro</th>
         <th>Principal</th>
         <th>Ações</th>
       </tr>
@@ -49,6 +49,11 @@
 
             <button class="btn btn-danger" (click)="openDialog(address)">
               Deletar
+            </button>
+            
+            <!-- Botão "Ver Detalhes" para abrir o modal -->
+            <button class="btn btn-primary" (click)="openAddressDetails(address)">
+              Ver Detalhes
             </button>
           </div>
         </th>
@@ -131,12 +136,13 @@
             </option>
           </select>
         </div>
-        <div class="mb-3 col-5">
+        <div class="mb-3 col">
           <label for="cityId" class="form-label">Cidade</label>
           <select
             class="form-select"
             aria-label="lista de estado"
             id="cityId"
+            formControlName="cityId"
 
             [class.invalid]="form.controls.cityId.invalid && isSubmit"
             placeholder="Selecione uma Cidade"
@@ -150,7 +156,7 @@
           </select>
         </div>
         <div class="mb-3 col-9">
-          <label for="street" class="form-label">Rua</label>
+          <label for="street" class="form-label">Logradouro</label>
           <input
             type="text"
             class="form-control"
@@ -173,8 +179,8 @@
             [class.invalid]="form.controls.locationType.invalid && isSubmit"
           />
         </div>
-        <div class="mb-3 col">
-          <label for="location" class="form-label">Local</label>
+        <!-- <div class="mb-3 col">
+          <label for="location" class="form-label">Cidade</label>
           <input
             type="text"
             class="form-control"
@@ -183,7 +189,7 @@
             placeholder="Building A"
             [class.invalid]="form.controls.location.invalid && isSubmit"
           />
-        </div>
+        </div> -->
         <div class="mb-3">
           <label for="neighborhood" class="form-label">Bairro</label>
           <input

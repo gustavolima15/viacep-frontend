@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { AuthResponse } from '../../types/auth-response.type';
 import { Router } from '@angular/router';
-
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // Certifique-se de que jwt-decode está instalado
 import { environment } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { SignUpForm } from '../../types/signup.request.type';
@@ -16,6 +14,7 @@ interface UserDetails {
   email: string;
   role: string;
 }
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,6 +28,7 @@ export class AuthService {
   ) {
     this.autoSignIn();
   }
+
   signIn(email: string, password: string): Observable<AuthResponse> {
     return this.httpClient
       .post<AuthResponse>(`${this.apiUrl}/auth/login`, { email, password })
@@ -39,9 +39,11 @@ export class AuthService {
         })
       );
   }
+
   signUp(dados: SignUpForm): Observable<void> {
     return this.httpClient.post<void>(`${this.apiUrl}/user/register`, dados);
   }
+
   autoSignIn() {
     if (typeof localStorage !== 'undefined') {
       const hasToken = localStorage.getItem('auth-token');
@@ -50,29 +52,46 @@ export class AuthService {
       }
     }
   }
+
   signOut() {
     localStorage.clear();
     this.router.navigate(['/auth']);
   }
 
+
   getUserDetail = (): UserDetails | null => {
     const token = this.getToken();
     if (!token) return null;
-    const decodedToken: any = jwtDecode(token);
-    const userDetail = {
-      id: decodedToken.userId,
-      name: decodedToken.userName,
-      email: decodedToken.sub,
-      role: decodedToken.role,
-    };
-
-    return userDetail;
+    
+    try {
+      const decodedToken: any = jwtDecode(token);
+      console.log("Decoded Token: ", decodedToken);
+  
+      const userDetail = {
+        id: decodedToken.userId,
+        name: decodedToken.userName,
+        email: decodedToken.sub,
+        role: decodedToken.role,
+      };
+  
+      console.log("User Details: ", userDetail);
+      return userDetail;
+      
+    } catch (error) {
+      console.error("Erro ao decodificar o token", error);
+      return null;
+    }
   };
+
+  isAdmin(): boolean {
+    const userDetail = this.getUserDetail();
+    return userDetail ? userDetail.role == 'ADMIN' : false;  
+  }
+
   private getToken = (): string | null => {
     if (typeof localStorage !== 'undefined') {
       return localStorage.getItem('auth-token') || '';
     }
-
     return null;
   };
 
@@ -87,7 +106,6 @@ export class AuthService {
 
   private isTokenExpired() {
     const token = this.getToken();
-
     if (!token) return true;
 
     const decoded = jwtDecode(token);
