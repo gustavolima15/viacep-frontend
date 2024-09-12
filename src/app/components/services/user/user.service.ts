@@ -16,8 +16,12 @@ export class UserService {
     return this.httpClient.get(`${this.apiUrl}/user`);
   }
 
+  getUserByEmail(email: string): Observable<any> {
+    return this.httpClient.get(`${this.apiUrl}/user/find-by-email?email=${email}`);
+  }
 
   deleteUser(userId: number): Observable<any> {
     return this.httpClient.delete<void>(`${this.apiUrl}/admin/delete-user/${userId}`);
   }
+
 }

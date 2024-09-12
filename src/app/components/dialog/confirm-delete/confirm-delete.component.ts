@@ -8,8 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [
     CommonModule,
-    MatDialogModule,   // Certifique-se de importar MatDialogModule
-    MatButtonModule    // Importando MatButtonModule para os botões
+    MatDialogModule,  
+    MatButtonModule    
   ],
   templateUrl: './confirm-delete.component.html',
   styleUrls: ['./confirm-delete.component.scss']
@@ -21,10 +21,10 @@ export class ConfirmDeleteComponent {
   ) {}
 
   onConfirm(): void {
-    this.dialogRef.close(true);  // Confirmar a exclusão
+    this.dialogRef.close(true);  
   }
 
   onCancel(): void {
-    this.dialogRef.close(false);  // Cancelar a exclusão
+    this.dialogRef.close(false);
   }
 }

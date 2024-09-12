@@ -1,6 +1,10 @@
 <div class="container mt-4">
     <h2>Lista de Usuários</h2>
     <button class="btn btn-primary mb-3" (click)="goToHome()">Home</button>
+    <div>
+      <input [(ngModel)]="email" placeholder="example@gmail.com" />
+      <button class="btn btn-primary" (click)="seachUserByEmail(email)">Buscar</button>
+    </div>
     <table class="table table-hover table-striped">
       <thead>
         <tr>
@@ -12,7 +16,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
-          <td>{{ user.userId }}</td>
+          <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>
